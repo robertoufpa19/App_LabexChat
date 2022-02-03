@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.robertocursoandroid.whatsapp">
+
+    <uses-feature
+        android:name="android.hardware.camera2"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_labexchat"
+        android:label="LabexChat"
+        android:roundIcon="@mipmap/ic_labexchat_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".activity.activity.CadastroGrupoActivity"
+            android:label="@string/title_activity_cadastro_grupo"
+            android:parentActivityName=".activity.activity.GrupoActivity"
+            android:theme="@style/Toolbar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.robertocursoandroid.whatsapp.activity.activity.GrupoActivity" />
+        </activity>
+        <activity
+            android:name=".activity.activity.GrupoActivity"
+            android:label="@string/title_activity_grupo"
+            android:parentActivityName=".activity.activity.MainActivity"
+            android:theme="@style/Toolbar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.robertocursoandroid.whatsapp.activity.activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activity.activity.ChatActivity"
+            android:label="@string/title_activity_chat"
+            android:parentActivityName=".activity.activity.MainActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.robertocursoandroid.whatsapp.activity.activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activity.activity.ConfiguracoesActivity"
+            android:parentActivityName=".activity.activity.MainActivity" />
+        <activity android:name=".activity.activity.CadastroActivity" />
+        <activity android:name=".activity.activity.MainActivity" />
+        <activity android:name=".activity.activity.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity> <!-- implementação para notificação(Inicio) -->
+        <service android:name=".activity.service.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <!--
+     Defina o ícone padrão personalizado. Isso é usado quando nenhum ícone é definido para mensagens de notificação de entrada.
+      Veja README (https://goo.gl/l4GJaQ) para mais.
+        -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_camera_black_24dp" />
+        <!--
+            Defina a cor usada com mensagens de notificação de entrada. Isso é usado quando nenhuma cor é definida para o
+              mensagem de notificação. Veja README (https://goo.gl/6BKBk7) para mais.
+        -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorPrimary" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+    </application>
+
+</manifest>

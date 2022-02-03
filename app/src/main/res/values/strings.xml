@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">LabexChat</string>
+    <string name="digite_email">Digite seu Email</string>
+    <string name="digite_senha">Digite sua Senha</string>
+    <string name="botao_logar">Logar</string>
+    <string name="nao_tem_conta">Não tem conta? cadastre-se</string>
+    <string name="digite_nome">Digite seu Nome</string>
+    <string name="digite_seu_nome">Digite seu Nome</string>
+    <string name="botao_cadastro" />
+    <string name="botao_cadastrar">Cadastrar</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_chat">ChatActivity</string>
+    <string name="title_activity_grupo">GrupoActivity</string>
+    <string name="title_activity_cadastro_grupo">CadastroGrupoActivity</string>
+
+    <string name="default_notification_channel_id">fcm_default_channel</string>
+    <string name="msg_token_fmt">msg_token_fmt</string>
+
+</resources>
