@@ -609,13 +609,16 @@ public class ChatActivity extends AppCompatActivity {
         mensagens.clear();
         recuperarTokenDestinatario();
 
-
         childEventListenerMensagens = mensagensRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Mensagem mensagem = dataSnapshot.getValue(Mensagem.class);
                 mensagens.add(mensagem);
+
                 adapter.notifyDataSetChanged();
+
+                // da o foco na ultima mensagem enviada
+                recyclerMensagens.scrollToPosition(mensagens.size() -1 );
 
                 Log.d("Teste"," Conversa salva");
             }
