@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,7 +39,7 @@ public class ConversasAdapter extends RecyclerView.Adapter<ConversasAdapter.MyVi
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemLista = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_contatos,parent,false);
+        View itemLista = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_mensagens_usuarios,parent,false);
 
         return new MyViewHolder(itemLista);
     }
@@ -62,6 +63,8 @@ public class ConversasAdapter extends RecyclerView.Adapter<ConversasAdapter.MyVi
                 holder.foto.setImageResource(R.drawable.padrao);
             }
 
+            // falta criar condição para a imagem de nova mensagem
+
 
         }else if(conversa.getIsGrupo().equals("false")){
             Usuario usuario = conversa.getUsuarioExibicao();
@@ -77,6 +80,7 @@ public class ConversasAdapter extends RecyclerView.Adapter<ConversasAdapter.MyVi
                 }
             }
 
+            // falta criar condição para a imagem de nova mensagem
 
         }
 
@@ -92,13 +96,15 @@ public class ConversasAdapter extends RecyclerView.Adapter<ConversasAdapter.MyVi
 
         CircleImageView foto;
         TextView nome, ultimaMensagem;
+        ImageView novaMensagem;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            foto = itemView.findViewById(R.id.imageViewFotoContatos);
-            nome = itemView.findViewById(R.id.textNomeContato);
-            ultimaMensagem = itemView.findViewById(R.id.textEmailContato);
+            foto = itemView.findViewById(R.id.imageViewFotoMensagensUsuario);
+            nome = itemView.findViewById(R.id.textNomeMensagensUsuario);
+            ultimaMensagem = itemView.findViewById(R.id.textUltimaMensagensUsuario);
+            novaMensagem = itemView.findViewById(R.id.imageNovaMensagem);
 
         }
     }
