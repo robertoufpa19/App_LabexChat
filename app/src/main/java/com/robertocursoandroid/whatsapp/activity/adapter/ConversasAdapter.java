@@ -95,8 +95,7 @@ public class ConversasAdapter extends RecyclerView.Adapter<ConversasAdapter.MyVi
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         CircleImageView foto;
-        TextView nome, ultimaMensagem;
-        ImageView novaMensagem;
+        TextView nome, ultimaMensagem, novaMensagem;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -104,7 +103,8 @@ public class ConversasAdapter extends RecyclerView.Adapter<ConversasAdapter.MyVi
             foto = itemView.findViewById(R.id.imageViewFotoMensagensUsuario);
             nome = itemView.findViewById(R.id.textNomeMensagensUsuario);
             ultimaMensagem = itemView.findViewById(R.id.textUltimaMensagensUsuario);
-            novaMensagem = itemView.findViewById(R.id.imageNovaMensagem);
+            novaMensagem = itemView.findViewById(R.id.textQtdNovasMensagens);
+
 
         }
     }
