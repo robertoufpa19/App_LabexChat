@@ -1,5 +1,6 @@
 package com.robertocursoandroid.whatsapp.activity.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -31,6 +32,7 @@ import com.robertocursoandroid.whatsapp.R;
 import com.robertocursoandroid.whatsapp.activity.config.ConfiguracaoFirebase;
 import com.robertocursoandroid.whatsapp.activity.fragment.ContatosFragment;
 import com.robertocursoandroid.whatsapp.activity.fragment.ConversasFragment;
+import com.robertocursoandroid.whatsapp.activity.helper.Permissao;
 import com.robertocursoandroid.whatsapp.activity.service.OuvinteMudancaRede;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,6 +41,12 @@ public class MainActivity extends AppCompatActivity {
     private MaterialSearchView searchView;
 
     private OuvinteMudancaRede mudancaRede = new OuvinteMudancaRede();
+
+    private String[] permissoesNecessarias = new String[]{
+
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("LabexChat");
         setSupportActionBar( toolbar );
 
-
+        // validar permissões
+        Permissao.validarPermissoes(permissoesNecessarias, this, 1);
 
         //Configurar abas
         final FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(

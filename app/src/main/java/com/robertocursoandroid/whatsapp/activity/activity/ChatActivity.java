@@ -1,5 +1,6 @@
 package com.robertocursoandroid.whatsapp.activity.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
@@ -42,6 +43,7 @@ import com.robertocursoandroid.whatsapp.activity.adapter.MensagensAdapter;
 import com.robertocursoandroid.whatsapp.activity.api.NotificacaoService;
 import com.robertocursoandroid.whatsapp.activity.config.ConfiguracaoFirebase;
 import com.robertocursoandroid.whatsapp.activity.helper.Base64Custom;
+import com.robertocursoandroid.whatsapp.activity.helper.Permissao;
 import com.robertocursoandroid.whatsapp.activity.helper.UsuarioFirebase;
 import com.robertocursoandroid.whatsapp.activity.model.Conversa;
 import com.robertocursoandroid.whatsapp.activity.model.Grupo;
@@ -107,6 +109,8 @@ public class ChatActivity extends AppCompatActivity {
 
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,6 +120,8 @@ public class ChatActivity extends AppCompatActivity {
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
 
         // configurações inicias para recuperar usuario
         textViewNome = findViewById(R.id.textViewNomeChat);

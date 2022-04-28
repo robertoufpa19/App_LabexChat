@@ -64,6 +64,8 @@
         tools:layout_editor_absoluteX="32dp"
         tools:layout_editor_absoluteY="301dp"
         android:textColor="#FFFFFF"
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="#FBFBFB"
         android:textColorHint="#FFFFFF"
         app:hintTextColor="#FFFFFF">
 
