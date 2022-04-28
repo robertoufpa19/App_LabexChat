@@ -86,11 +86,20 @@ public class ConversasFragment extends Fragment {
                                     i.putExtra("chatGrupo",conversaSelecionada.getGrupo());
                                     startActivity(i);
 
+                                    // mensagem visualizada e remove a notificacão de nova mensagem
+                                    conversaSelecionada.setNovaMensagem("false");
+                                    conversaSelecionada.salvar();
+
 
                                 }else {
+
                                     Intent intent = new Intent(getActivity(), ChatActivity.class);
                                     intent.putExtra("chatContato",conversaSelecionada.getUsuarioExibicao());
                                     startActivity(intent);
+
+                                    // mensagem visualizada e remove a notificacão de nova mensagem
+                                    conversaSelecionada.setNovaMensagem("false");
+                                    conversaSelecionada.salvar();
 
                                 }
 

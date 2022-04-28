@@ -1,7 +1,9 @@
 package com.robertocursoandroid.whatsapp.activity.activity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -33,6 +35,7 @@ import com.robertocursoandroid.whatsapp.activity.config.ConfiguracaoFirebase;
 import com.robertocursoandroid.whatsapp.activity.helper.UsuarioFirebase;
 import com.robertocursoandroid.whatsapp.activity.model.Grupo;
 import com.robertocursoandroid.whatsapp.activity.model.Usuario;
+import com.robertocursoandroid.whatsapp.activity.service.OuvinteMudancaRede;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -54,6 +57,8 @@ public class CadastroGrupoActivity extends AppCompatActivity {
     private EditText editNomeGrupo;
 
     private Usuario usuario; //teste
+
+    private OuvinteMudancaRede mudancaRede = new OuvinteMudancaRede();
 
 
     @Override
@@ -211,5 +216,21 @@ public class CadastroGrupoActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // verificar acesso a internet
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mudancaRede, filter);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        unregisterReceiver(mudancaRede);
     }
 }

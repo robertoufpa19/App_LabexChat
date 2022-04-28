@@ -8,19 +8,29 @@
         <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/drawable/bg_balao.xml" value="0.1845" />
         <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/drawable/circular_textview.xml" value="0.1845" />
         <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/drawable/ic_camera_black_24dp.xml" value="0.1814814814814815" />
+        <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/drawable/ic_logo_padrao_3p_24.xml" value="0.1845" />
+        <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/drawable/ic_logo_padrao_labexchat_3p_24.xml" value="0.1845" />
         <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/drawable/ic_mensagem_nao_lida_24.xml" value="0.161" />
+        <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/drawable/ic_mensagem_visualizada_24.xml" value="0.1845" />
         <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/layout/activity_cadastro.xml" value="0.19746376811594202" />
         <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/layout/activity_cadastro_grupo.xml" value="0.19746376811594202" />
+        <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/layout/activity_chat.xml" value="0.18795289855072464" />
         <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/layout/activity_configuracoes.xml" value="0.16304347826086957" />
         <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/layout/activity_grupo.xml" value="0.19746376811594202" />
         <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/layout/activity_login.xml" value="0.19746376811594202" />
         <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/layout/activity_main.xml" value="0.10739614994934144" />
+        <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/layout/activity_sobre.xml" value="0.33" />
         <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/layout/adapter_contatos.xml" value="0.16304347826086957" />
         <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/layout/adapter_grupo_selecionado.xml" value="0.19746376811594202" />
         <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/layout/adapter_mensagens_usuarios.xml" value="0.33" />
         <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/layout/content_cadastro_grupo.xml" value="0.19746376811594202" />
+        <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/layout/content_chat.xml" value="0.22" />
+        <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/layout/dialogo_acesso_internet.xml" value="0.17617753623188406" />
+        <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/layout/divisor.xml" value="0.18795289855072464" />
         <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/layout/fragment_conversas.xml" value="0.1453804347826087" />
         <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/layout/toolbar.xml" value="0.16485507246376813" />
+        <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/mipmap-anydpi-v26/ic_labexchat.xml" value="0.1845" />
+        <entry key="..\:/App prontos android studio/LabexChat/WhatsApp/app/src/main/res/mipmap-anydpi-v26/ic_labexchat_padrao.xml" value="0.1845" />
       </map>
     </option>
   </component>

@@ -48,7 +48,9 @@
                 android:layout_weight="1"
                 android:background="@android:color/white"
                 android:ems="10"
-                android:inputType="textCapSentences|textAutoCorrect"/>  <!--auto completa e corretor ortográfico-->
+                android:hint="Digite sua mensagem"
+                android:inputType="textCapSentences|textAutoCorrect"
+                tools:ignore="TouchTargetSizeCheck" />  <!--auto completa e corretor ortográfico-->
 
             <ImageView
                 android:id="@+id/imageCamera"
@@ -73,6 +75,7 @@
             android:onClick="enviarMensagem"
             app:backgroundTint="@color/colorPrimary"
             app:fabSize="mini"
-            app:srcCompat="@drawable/ic_send_branco_24dp" />
+            app:srcCompat="@drawable/ic_send_branco_24dp"
+            tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
     </LinearLayout>
 </LinearLayout>

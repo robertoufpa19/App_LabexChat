@@ -1,7 +1,9 @@
 package com.robertocursoandroid.whatsapp.activity.activity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -48,6 +50,8 @@ import com.robertocursoandroid.whatsapp.activity.model.Mensagem;
 import com.robertocursoandroid.whatsapp.activity.model.Notificacao;
 import com.robertocursoandroid.whatsapp.activity.model.NotificacaoDados;
 import com.robertocursoandroid.whatsapp.activity.model.Usuario;
+import com.robertocursoandroid.whatsapp.activity.service.OuvinteMudancaRede;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -97,9 +101,9 @@ public class ChatActivity extends AppCompatActivity {
     private String token;
     private String listaTokensMembrosGrupo;
 
-    //teste
-    private FirebaseUser usuarioAtual;
-    private DatabaseReference usuariosRef;
+    private DatabaseReference usuarioRef;
+
+    private OuvinteMudancaRede mudancaRede = new OuvinteMudancaRede();
 
 
 
@@ -140,25 +144,24 @@ public class ChatActivity extends AppCompatActivity {
                 textViewNome.setText(grupo.getNome()); // exibe nome do grupo em cima do chat
                 // exibe foto do grupo em cima do chat
                 String foto = grupo.getFoto();
-                if(foto != null){
-                    Uri url = Uri.parse(foto);
-                    Glide.with(ChatActivity.this)
-                            .load(url)
+
+                if(foto != ""){
+                    Picasso.get()
+                            .load(foto)
                             .into(circleImageViewFoto);
                 }else{
                     circleImageViewFoto.setImageResource(R.drawable.padrao);
                 }
+
             }else if(bundle.containsKey("chatContato")){
                 ///**** inicio conversa normal
                 usuarioDestinatario = (Usuario) bundle.getSerializable("chatContato");
                 textViewNome.setText(usuarioDestinatario.getNome()); // exibe nome do destinatario em cima do chat
-                // recuperar token do usuario destinatario
-                recuperarTokenDestinatario();
+
                 String foto = usuarioDestinatario.getFoto();
-                if(foto != null){
-                    Uri url = Uri.parse(usuarioDestinatario.getFoto());
-                    Glide.with(ChatActivity.this)
-                            .load(url)
+                if(foto != ""){
+                    Picasso.get()
+                            .load(foto)
                             .into(circleImageViewFoto);
                 }else{
                     circleImageViewFoto.setImageResource(R.drawable.padrao);
@@ -241,8 +244,31 @@ public class ChatActivity extends AppCompatActivity {
                 }
 
             }else if(bundleToken.containsKey("chatContato")){
+               // usuarioDestinatario = (Usuario) bundleToken.getSerializable("chatContato");
+              //  token = usuarioDestinatario.getToken(); //teste recuperar token usuario padrao
+
+
                 usuarioDestinatario = (Usuario) bundleToken.getSerializable("chatContato");
-                token = usuarioDestinatario.getToken(); //teste recuperar token usuario padrao
+                // token = usuarioDestinatario.getTokenUsuario();
+                // recuperar token do NO usuarios
+                usuarioRef =  ConfiguracaoFirebase.getFirebaseDatabase()
+                        .child("usuarios")
+                        .child(idUsuarioDestinatario)
+                        .child("token");
+                usuarioRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        String tokenUsuario =  snapshot.getValue().toString();
+                        token = tokenUsuario;
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
 
             }
         }
@@ -332,7 +358,7 @@ public class ChatActivity extends AppCompatActivity {
                                                 salvarMensagem(idRemetenteGrupo, idUsuarioDestinatario, mensagem);
 
                                                 // salvar conversas do grupo                             // membros do grpo
-                                                salvarConversa( idRemetenteGrupo,idUsuarioDestinatario, usuarioDestinatario, mensagem, true);
+                                                salvarConversa( idRemetenteGrupo,idUsuarioDestinatario, usuarioDestinatario, mensagem, true, true);
                                             }
                                             enviarNotificacao();
 
@@ -401,7 +427,7 @@ public class ChatActivity extends AppCompatActivity {
                         salvarMensagem(idRemetenteGrupo, idUsuarioDestinatario, mensagem);
 
                         // salvar conversas do grupo                             // membros do grpo
-                        salvarConversa( idRemetenteGrupo,idUsuarioDestinatario, usuarioDestinatario, mensagem, true);
+                        salvarConversa( idRemetenteGrupo,idUsuarioDestinatario, usuarioDestinatario, mensagem, true, true);
                     }
                 }else if(bundleEnviarMensagem.containsKey("chatContato")){
                     usuarioDestinatario = (Usuario) bundleEnviarMensagem.getSerializable("chatContato");
@@ -421,10 +447,10 @@ public class ChatActivity extends AppCompatActivity {
                     salvarMensagem(idUsuarioDestinatario, idUsuarioRemetente, mensagem);
 
                     // salvar conversas remetente                          // usuario exibição
-                    salvarConversa(idUsuarioRemetente,idUsuarioDestinatario, usuarioDestinatario, mensagem, false);
+                    salvarConversa(idUsuarioRemetente,idUsuarioDestinatario, usuarioDestinatario, mensagem, false, false);
                     // salvar conversas destinatario
                     // usuario exibição
-                    salvarConversa(idUsuarioDestinatario, idUsuarioRemetente, usuarioRemetente, mensagem,false );
+                    salvarConversa(idUsuarioDestinatario, idUsuarioRemetente, usuarioRemetente, mensagem,false, true );
 
 
 
@@ -462,7 +488,7 @@ public class ChatActivity extends AppCompatActivity {
                 to = tokenDestinatarioGrupo ;
 
                 //Monta objeto notificação
-                Notificacao notificacao = new Notificacao("LabexChat", "Nova Mensagem");
+                Notificacao notificacao = new Notificacao("Nova Mensagem", "" + usuarioRemetente.getNome());
                 NotificacaoDados notificacaoDados = new NotificacaoDados(to, notificacao );
 
                 NotificacaoService service = retrofit.create(NotificacaoService.class);
@@ -513,7 +539,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
             //Monta objeto notificação
-            Notificacao notificacao = new Notificacao("LabexChat", "Nova Mensagem");
+            Notificacao notificacao = new Notificacao("Nova Mensagem", ""+usuarioRemetente.getNome());
             NotificacaoDados notificacaoDados = new NotificacaoDados(to, notificacao );
 
             NotificacaoService service = retrofit.create(NotificacaoService.class);
@@ -552,13 +578,15 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-    private void salvarConversa(String idRemetente, String idDestinatario, Usuario usuarioExibição, Mensagem msg, boolean isGroup){
+    private void salvarConversa(String idRemetente, String idDestinatario, Usuario usuarioExibição, Mensagem msg, boolean isGroup, boolean novaMensagem){
 
         Conversa conversaRemetente = new Conversa();
         conversaRemetente.setIdRemetente(idRemetente);
         conversaRemetente.setIdDestinatario(idDestinatario);
         conversaRemetente.setUltimaMensagem(msg.getMensagem());
 
+        // salvar  mensagens novas
+        conversaRemetente.setNovaMensagem(String.valueOf(novaMensagem));
 
         if(isGroup){ // conversa de grupo
             conversaRemetente.setIsGrupo("true");
@@ -593,6 +621,11 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        // verificar acesso a internet
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mudancaRede, filter);
+
         recuperarMensagens();
         recuperarTokenDestinatario();
 
@@ -601,6 +634,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        unregisterReceiver(mudancaRede);
         mensagensRef.removeEventListener(childEventListenerMensagens);
     }
 

@@ -1,9 +1,12 @@
 package com.robertocursoandroid.whatsapp.activity.activity;
 
 import android.annotation.SuppressLint;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,27 +30,38 @@ import com.robertocursoandroid.whatsapp.activity.config.ConfiguracaoFirebase;
 import com.robertocursoandroid.whatsapp.activity.helper.Base64Custom;
 import com.robertocursoandroid.whatsapp.activity.helper.UsuarioFirebase;
 import com.robertocursoandroid.whatsapp.activity.model.Usuario;
+import com.robertocursoandroid.whatsapp.activity.service.OuvinteMudancaRede;
 
 public class CadastroActivity extends AppCompatActivity {
 
     private TextInputEditText campoNome, campoEmail, campoSenha;
 
     private FirebaseAuth autenticacao;
+    private ProgressBar progressBarCadastro;
+
+
+    private OuvinteMudancaRede mudancaRede = new OuvinteMudancaRede();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cadastro);
 
-       campoNome  = findViewById(R.id.editCadastroNome);
+        campoNome  = findViewById(R.id.editCadastroNome);
         campoEmail = findViewById(R.id.editCadastroEmail);
         campoSenha = findViewById(R.id.editCadastroSenha);
+        progressBarCadastro = findViewById(R.id.progressCadastro);
+
+        progressBarCadastro.setVisibility(View.GONE);
 
 
     }
         // cadastro do usuario em tempo real
       public void cadastrarUsuario(final Usuario usuario){
-         autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
+
+          progressBarCadastro.setVisibility(View.VISIBLE);
+
+          autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
            autenticacao.createUserWithEmailAndPassword(
 
 
@@ -59,15 +73,18 @@ public class CadastroActivity extends AppCompatActivity {
                public void onComplete(@NonNull Task<AuthResult> task) {
 
                    if(task.isSuccessful()){
+
+                       progressBarCadastro.setVisibility(View.GONE);
+
                        Toast.makeText(CadastroActivity.this,
                                "Sucesso ao cadastrar usuario!",
                                Toast.LENGTH_SHORT).show();
                        UsuarioFirebase.atualizarNomeUsuario(usuario.getNome());
-
                        finish();
 
-                        try {
 
+                        try {
+                            progressBarCadastro.setVisibility(View.GONE);
                             String indentificadorUsuario = Base64Custom.codificarBase64(usuario.getEmail());
                              usuario.setId(indentificadorUsuario);
                              usuario.salvar();
@@ -170,5 +187,19 @@ public class CadastroActivity extends AppCompatActivity {
       }
 
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // verificar acesso a internet
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mudancaRede, filter);
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        unregisterReceiver(mudancaRede);
+    }
 }

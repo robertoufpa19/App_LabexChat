@@ -18,6 +18,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.robertocursoandroid.whatsapp.R;
 import com.robertocursoandroid.whatsapp.activity.activity.ChatActivity;
+import com.robertocursoandroid.whatsapp.activity.activity.MainActivity;
 
 // classe responsavel pela comunicação do firebase
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
@@ -45,7 +46,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         //Configuração para notificação
         String canal = getString(R.string.default_notification_channel_id);
         Uri uriSom = RingtoneManager.getDefaultUri( RingtoneManager.TYPE_NOTIFICATION );
-        Intent intent = new Intent(this, ChatActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
         //Criar notificação

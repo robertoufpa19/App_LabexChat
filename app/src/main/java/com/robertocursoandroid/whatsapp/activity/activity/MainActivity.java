@@ -2,6 +2,8 @@ package com.robertocursoandroid.whatsapp.activity.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -29,13 +31,14 @@ import com.robertocursoandroid.whatsapp.R;
 import com.robertocursoandroid.whatsapp.activity.config.ConfiguracaoFirebase;
 import com.robertocursoandroid.whatsapp.activity.fragment.ContatosFragment;
 import com.robertocursoandroid.whatsapp.activity.fragment.ConversasFragment;
+import com.robertocursoandroid.whatsapp.activity.service.OuvinteMudancaRede;
 
 public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth autenticacao;
     private MaterialSearchView searchView;
 
-
+    private OuvinteMudancaRede mudancaRede = new OuvinteMudancaRede();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,6 +162,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menuConfiguracoes :
                 abrirConfiguracoes();
                 break;
+
+            case R.id.menuSobre:
+                abrirSobre();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -177,5 +184,26 @@ public class MainActivity extends AppCompatActivity {
     public void abrirConfiguracoes(){
         Intent intent = new Intent(MainActivity.this, ConfiguracoesActivity.class);
         startActivity( intent );
+    }
+    public void abrirSobre(){
+        Intent intent = new Intent(MainActivity.this, SobreActivity.class);
+        startActivity( intent );
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // verificar acesso a internet
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mudancaRede, filter);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        unregisterReceiver(mudancaRede);
     }
 }

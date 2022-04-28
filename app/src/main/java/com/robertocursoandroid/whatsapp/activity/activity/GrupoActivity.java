@@ -1,6 +1,8 @@
 package com.robertocursoandroid.whatsapp.activity.activity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -26,6 +28,7 @@ import com.robertocursoandroid.whatsapp.activity.config.ConfiguracaoFirebase;
 import com.robertocursoandroid.whatsapp.activity.helper.RecyclerItemClickListener;
 import com.robertocursoandroid.whatsapp.activity.helper.UsuarioFirebase;
 import com.robertocursoandroid.whatsapp.activity.model.Usuario;
+import com.robertocursoandroid.whatsapp.activity.service.OuvinteMudancaRede;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -43,6 +46,8 @@ public class GrupoActivity extends AppCompatActivity {
     private FirebaseUser usuarioAtual;
     private Toolbar toolbar;
     private FloatingActionButton fabAvancarCadastro;
+
+    private OuvinteMudancaRede mudancaRede = new OuvinteMudancaRede();
 
     public void atualizarMembrosToolbar(){
 
@@ -212,12 +217,19 @@ public class GrupoActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+        // verificar acesso a internet
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mudancaRede, filter);
+
         recuperarContatos();
     }
 
     @Override
     public void onStop() {
         super.onStop();
+
+        unregisterReceiver(mudancaRede);
+
         usuariosRef.removeEventListener( valueEventListenerMembros );
     }
 

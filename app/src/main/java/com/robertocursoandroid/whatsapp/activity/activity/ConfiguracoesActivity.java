@@ -3,8 +3,10 @@ package com.robertocursoandroid.whatsapp.activity.activity;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -33,10 +35,12 @@ import com.robertocursoandroid.whatsapp.activity.config.ConfiguracaoFirebase;
 import com.robertocursoandroid.whatsapp.activity.helper.Permissao;
 import com.robertocursoandroid.whatsapp.activity.helper.UsuarioFirebase;
 import com.robertocursoandroid.whatsapp.activity.model.Usuario;
+import com.robertocursoandroid.whatsapp.activity.service.OuvinteMudancaRede;
 
 import java.io.ByteArrayOutputStream;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import dmax.dialog.SpotsDialog;
 
 public class ConfiguracoesActivity extends AppCompatActivity {
 
@@ -58,6 +62,12 @@ public class ConfiguracoesActivity extends AppCompatActivity {
     private EditText editNomePerfil;
 
     private Usuario usuarioLogado;
+
+    private android.app.AlertDialog dialog;
+
+
+    private OuvinteMudancaRede mudancaRede = new OuvinteMudancaRede();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +184,13 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                              imagem.compress(Bitmap.CompressFormat.JPEG, 70, baos);
                               byte[] dadosImagem = baos.toByteArray();
 
+                           dialog = new SpotsDialog.Builder()
+                                   .setContext(this)
+                                   .setMessage("Carregando dados")
+                                   .setCancelable(false)
+                                   .build();
+                           dialog.show();
+
                              // salvar imagem no Firebase storage
                              final StorageReference imagemRef = storageReference
                                      .child("imagem")
@@ -212,6 +229,8 @@ public class ConfiguracoesActivity extends AppCompatActivity {
 
                                          }
                                      });
+
+                                     dialog.dismiss(); // fecha o carregando
                                  }
                              });
                        }
@@ -265,4 +284,22 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                        dialog.show();
 
     }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // verificar acesso a internet
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mudancaRede, filter);
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        unregisterReceiver(mudancaRede);
+    }
+
 }

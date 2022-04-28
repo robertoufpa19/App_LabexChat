@@ -1,8 +1,11 @@
 package com.robertocursoandroid.whatsapp.activity.activity;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,12 +23,17 @@ import com.google.firebase.auth.FirebaseUser;
 import com.robertocursoandroid.whatsapp.R;
 import com.robertocursoandroid.whatsapp.activity.config.ConfiguracaoFirebase;
 import com.robertocursoandroid.whatsapp.activity.model.Usuario;
+import com.robertocursoandroid.whatsapp.activity.service.OuvinteMudancaRede;
 
 public class LoginActivity extends AppCompatActivity {
 
       private TextInputEditText campoEmail, campoSenha;
 
-       private FirebaseAuth  autenticacao;
+      private FirebaseAuth  autenticacao;
+      private ProgressBar progressBarLogin;
+
+
+    private OuvinteMudancaRede mudancaRede = new OuvinteMudancaRede();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +44,14 @@ public class LoginActivity extends AppCompatActivity {
 
         campoEmail = findViewById(R.id.editLoginEmail);
         campoSenha = findViewById(R.id.editLoginSenha);
+        progressBarLogin = findViewById(R.id.progressLogin);
 
 
     }
 
-        public  void logarUsuario(Usuario  usuario){
+    public  void logarUsuario(Usuario  usuario){
+
+        progressBarLogin.setVisibility(View.VISIBLE);
 
         autenticacao.signInWithEmailAndPassword(
                 usuario.getEmail(), usuario.getSenha()
@@ -51,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
                 if (task.isSuccessful()){
+                        progressBarLogin.setVisibility(View.GONE);
 
                       abrirTelaPrincipal();
 
@@ -72,6 +84,8 @@ public class LoginActivity extends AppCompatActivity {
                             excecao,
                             Toast.LENGTH_SHORT).show();
 
+                    progressBarLogin.setVisibility(View.GONE);
+
                 }
             }
         });
@@ -80,6 +94,10 @@ public class LoginActivity extends AppCompatActivity {
 
 
       public void validarAutenticacaoUsuario(View view){
+
+          // login usuario
+          progressBarLogin.setVisibility(View.GONE);
+
           String textoEmail = campoEmail.getText().toString();
           String textoSenha = campoSenha.getText().toString();
 
@@ -113,6 +131,10 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        // verificar acesso a internet
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mudancaRede, filter);
+
         FirebaseUser usuarioAtual = autenticacao.getCurrentUser();
 
         if(usuarioAtual != null){
@@ -120,6 +142,13 @@ public class LoginActivity extends AppCompatActivity {
          }
 
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        unregisterReceiver(mudancaRede);
     }
 
     public void abrirTelaCadastro(View view){

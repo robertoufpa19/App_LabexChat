@@ -3,11 +3,9 @@ package com.robertocursoandroid.whatsapp.activity.adapter;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +15,7 @@ import com.robertocursoandroid.whatsapp.R;
 import com.robertocursoandroid.whatsapp.activity.model.Conversa;
 import com.robertocursoandroid.whatsapp.activity.model.Grupo;
 import com.robertocursoandroid.whatsapp.activity.model.Usuario;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -51,6 +50,7 @@ public class ConversasAdapter extends RecyclerView.Adapter<ConversasAdapter.MyVi
 
         Conversa conversa = conversas.get( position );
         holder.ultimaMensagem.setText( conversa.getUltimaMensagem() );
+
         // condição para verificar se é uma conversa de grupo ou não
         if(conversa.getIsGrupo().equals("true")){
             Grupo grupo = conversa.getGrupo();
@@ -63,7 +63,14 @@ public class ConversasAdapter extends RecyclerView.Adapter<ConversasAdapter.MyVi
                 holder.foto.setImageResource(R.drawable.padrao);
             }
 
-            // falta criar condição para a imagem de nova mensagem
+            //  condição para verificar novas mensagens
+            if(conversa.getNovaMensagem().equals("true")){
+                holder.novaMensagem.setVisibility( View.VISIBLE);
+
+            }else{
+                holder.novaMensagem.setVisibility( View.GONE);
+
+            }
 
 
         }else if(conversa.getIsGrupo().equals("false")){
@@ -74,13 +81,23 @@ public class ConversasAdapter extends RecyclerView.Adapter<ConversasAdapter.MyVi
                 //configura foto de usuarios na conversa
                 if ( usuario.getFoto() != null ){
                     Uri uri = Uri.parse( usuario.getFoto() );
-                    Glide.with( context ).load( uri ).into( holder.foto );
+                    //Glide.with( context ).load( uri ).into( holder.foto );
+                    Picasso.get().load( uri ).into( holder.foto);
                 }else {
                     holder.foto.setImageResource(R.drawable.padrao);
                 }
             }
 
-            // falta criar condição para a imagem de nova mensagem
+            //  condição para verificar novas mensagens
+            if(conversa.getNovaMensagem().equals("true")){
+                holder.novaMensagem.setVisibility( View.VISIBLE);
+
+            }else{
+                holder.novaMensagem.setVisibility( View.GONE);
+
+            }
+
+
 
         }
 

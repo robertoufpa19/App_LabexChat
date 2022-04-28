@@ -14,6 +14,11 @@
         app:showAsAction="never"
         />
 
+    <item android:id="@+id/menuSobre"
+        android:title="Sobre"
+        app:showAsAction="never"
+        />
+
     <item android:id="@+id/menuSair"
         android:title="Sair"
         app:showAsAction="never"
