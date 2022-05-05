@@ -94,7 +94,7 @@ public class ConversasFragment extends Fragment {
                                 }else {
 
                                     Intent intent = new Intent(getActivity(), ChatActivity.class);
-                                    intent.putExtra("chatContato",conversaSelecionada.getUsuarioExibicao());
+                                    intent.putExtra("chat",conversaSelecionada.getUsuarioExibicao());
                                     startActivity(intent);
 
                                     // mensagem visualizada e remove a notificacão de nova mensagem

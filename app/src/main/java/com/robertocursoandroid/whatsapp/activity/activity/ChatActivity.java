@@ -176,6 +176,23 @@ public class ChatActivity extends AppCompatActivity {
                 idUsuarioDestinatario = Base64Custom.codificarBase64( usuarioDestinatario.getEmail() );
                 recuperarTokenDestinatario();
                 ///**** fim conversa normal
+            }else if(bundle.containsKey("chat")){
+                ///**** inicio conversa normal
+                usuarioDestinatario = (Usuario) bundle.getSerializable("chat");
+                textViewNome.setText(usuarioDestinatario.getNome()); // exibe nome do destinatario em cima do chat
+
+                String foto = usuarioDestinatario.getFoto();
+                if(foto != ""){
+                    Picasso.get()
+                            .load(foto)
+                            .into(circleImageViewFoto);
+                }else{
+                    circleImageViewFoto.setImageResource(R.drawable.padrao);
+                }
+                //recuperar dados usuario destinatario
+                idUsuarioDestinatario = Base64Custom.codificarBase64( usuarioDestinatario.getEmail() );
+                recuperarTokenDestinatario();
+                ///**** fim conversa normal
             }
 
         }
@@ -255,6 +272,33 @@ public class ChatActivity extends AppCompatActivity {
 
 
                 usuarioDestinatario = (Usuario) bundleToken.getSerializable("chatContato");
+                // token = usuarioDestinatario.getTokenUsuario();
+                // recuperar token do NO usuarios
+                usuarioRef =  ConfiguracaoFirebase.getFirebaseDatabase()
+                        .child("usuarios")
+                        .child(idUsuarioDestinatario)
+                        .child("token");
+                usuarioRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        String tokenUsuario =  snapshot.getValue().toString();
+                        token = tokenUsuario;
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+            }else if(bundleToken.containsKey("chat")){
+                // usuarioDestinatario = (Usuario) bundleToken.getSerializable("chatContato");
+                //  token = usuarioDestinatario.getToken(); //teste recuperar token usuario padrao
+
+
+                usuarioDestinatario = (Usuario) bundleToken.getSerializable("chat");
                 // token = usuarioDestinatario.getTokenUsuario();
                 // recuperar token do NO usuarios
                 usuarioRef =  ConfiguracaoFirebase.getFirebaseDatabase()
@@ -379,6 +423,17 @@ public class ChatActivity extends AppCompatActivity {
                                             // salvar mensagem para o destinatario
                                             salvarMensagem(idUsuarioDestinatario,idUsuarioRemetente,mensagem);
                                             enviarNotificacao();
+                                        }else if(bundleFoto.containsKey("chat")){ // mensagem normal entre duas pessaos
+                                            usuarioDestinatario = (Usuario) bundleFoto.getSerializable("chat");
+                                            Mensagem mensagem = new Mensagem();
+                                            mensagem.setIdUsuario(idUsuarioRemetente);
+                                            mensagem.setMensagem("imagem.jpeg");
+                                            mensagem.setImagem(dowloadUrl);
+                                            // salvar mensagem para o rementente
+                                            salvarMensagem(idUsuarioRemetente, idUsuarioDestinatario,mensagem);
+                                            // salvar mensagem para o destinatario
+                                            salvarMensagem(idUsuarioDestinatario,idUsuarioRemetente,mensagem);
+                                            enviarNotificacao();
                                         }
                                         Toast.makeText(ChatActivity.this,
                                                 "Sucesso ao enviar imagem!",
@@ -437,6 +492,31 @@ public class ChatActivity extends AppCompatActivity {
                     }
                 }else if(bundleEnviarMensagem.containsKey("chatContato")){
                     usuarioDestinatario = (Usuario) bundleEnviarMensagem.getSerializable("chatContato");
+                    // trocando mensagens entre usuarios padrão
+                    Mensagem mensagem = new Mensagem();
+                    mensagem.setIdUsuario(idUsuarioRemetente);
+                    mensagem.setMensagem(textoMensagem);
+
+
+
+
+
+
+                    // salvar mensagem para o remetente
+                    salvarMensagem(idUsuarioRemetente, idUsuarioDestinatario, mensagem); //
+                    // salvar mensagem para o destinatario
+                    salvarMensagem(idUsuarioDestinatario, idUsuarioRemetente, mensagem);
+
+                    // salvar conversas remetente                          // usuario exibição
+                    salvarConversa(idUsuarioRemetente,idUsuarioDestinatario, usuarioDestinatario, mensagem, false, false);
+                    // salvar conversas destinatario
+                    // usuario exibição
+                    salvarConversa(idUsuarioDestinatario, idUsuarioRemetente, usuarioRemetente, mensagem,false, true );
+
+
+
+                }else if(bundleEnviarMensagem.containsKey("chat")){
+                    usuarioDestinatario = (Usuario) bundleEnviarMensagem.getSerializable("chat");
                     // trocando mensagens entre usuarios padrão
                     Mensagem mensagem = new Mensagem();
                     mensagem.setIdUsuario(idUsuarioRemetente);
@@ -531,6 +611,55 @@ public class ChatActivity extends AppCompatActivity {
 
         }else if(bundleNotificacao.containsKey("chatContato")){
             usuarioDestinatario = (Usuario) bundleNotificacao.getSerializable("chatContato");
+
+            //  recuperarTokenDestinatario();
+            // String jurema = "er1eptpnRMKlsLJFYKv2cm:APA91bGq9g3feWSPIKRoiF8yDrcpyzDdK0Hn0bLI-uCDdXWDriRm8Jb-_UKcVpESVfv808o3H7qef-idxWD2dufgCokcTuONwQxM0zdWba-L00ojGJj3VTZRX-GsNkIVrU1fq7DIdYs7";
+            //  String roberto = "cHpfmiiQS32YqN0DlNviFW:APA91bH95zMMLBuboc16H8sbJWzDf40rWuoLEO744qKGf9i7xv9RyNw8EX_-ZUr_jlOxWiTb3bmXM6DnMq_degLYr1gKpap7XIU_IC6XO3VJWtl1B8mG95MD6LhfBkyG-Xs3IMpfc1zU";
+
+            token = usuarioDestinatario.getToken();//  recuperar Token Destinatario
+
+            String tokenDestinatario = token;
+            String to = "";// para quem vou enviar a menssagem
+            to = tokenDestinatario ;
+
+
+
+            //Monta objeto notificação
+            Notificacao notificacao = new Notificacao("Nova Mensagem", ""+usuarioRemetente.getNome());
+            NotificacaoDados notificacaoDados = new NotificacaoDados(to, notificacao );
+
+            NotificacaoService service = retrofit.create(NotificacaoService.class);
+            Call<NotificacaoDados> call = service.salvarNotificacao( notificacaoDados );
+
+
+
+            call.enqueue(new Callback<NotificacaoDados>() {
+                @Override
+                public void onResponse(Call<NotificacaoDados> call, Response<NotificacaoDados> response) {
+
+                    if( response.isSuccessful() ){
+
+                        //teste para verificar se enviou a notificação
+                           /*  Toast.makeText(getApplicationContext(),
+                                     "codigo: " + response.code(),
+                                     Toast.LENGTH_LONG ).show();
+
+                            */
+
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<NotificacaoDados> call, Throwable t) {
+
+                }
+            });
+
+
+            ///// fim  código para notificação
+
+        }else if(bundleNotificacao.containsKey("chat")){
+            usuarioDestinatario = (Usuario) bundleNotificacao.getSerializable("chat");
 
             //  recuperarTokenDestinatario();
             // String jurema = "er1eptpnRMKlsLJFYKv2cm:APA91bGq9g3feWSPIKRoiF8yDrcpyzDdK0Hn0bLI-uCDdXWDriRm8Jb-_UKcVpESVfv808o3H7qef-idxWD2dufgCokcTuONwQxM0zdWba-L00ojGJj3VTZRX-GsNkIVrU1fq7DIdYs7";
